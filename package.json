@@ -1,0 +1,16 @@
+{
+  "name": "bitnunchain",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "15.2.4",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "thirdweb": "^5.105.37",
+    "tailwindcss": "^4.1.12"
+  }
+}
