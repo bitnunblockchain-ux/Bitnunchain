@@ -1,13 +1,15 @@
-import { useSendTransaction, useActiveAccount } from "thirdweb/react";
+import { useSendTransaction, useActiveAccount, useThirdwebClient } from "thirdweb/react";
 import { getContract } from "thirdweb";
 import { claimTo } from "thirdweb/extensions/erc721";
 import { polygon } from "thirdweb/chains";
 
-const NFT_CONTRACT = "0x81d05436CB7D571954407F2B7775c8D9Ab45d70D"; // <-- Must be a string
+const NFT_CONTRACT = "0x81d05436CB7D571954407F2B7775c8D9Ab45d70D";
 
 export default function MintNFT() {
   const account = useActiveAccount();
+  const client = useThirdwebClient(); // get the client from provider
   const contract = getContract({
+    client,
     address: NFT_CONTRACT,
     chain: polygon,
   });
@@ -20,8 +22,8 @@ export default function MintNFT() {
       claimTo({
         contract,
         to: account.address,
-        quantity: 1n,
-      })
+        quantity: 1n, // adjust as needed
+      }),
     );
   };
 
