@@ -1,42 +1,33 @@
-import { useSendTransaction, useActiveAccount, useThirdwebClient } from "thirdweb/react";
-import { getContract } from "thirdweb";
-import { claimTo } from "thirdweb/extensions/erc721";
-import { polygon } from "thirdweb/chains";
+import { useActiveAccount, useMintNFT } from "@thirdweb-dev/react";
+import { getContract } from "@thirdweb-dev/sdk";
+import { polygon } from "@thirdweb-dev/chains";
 
-const NFT_CONTRACT = "0x81d05436CB7D571954407F2B7775c8D9Ab45d70D";
+// Directly use your NFT Drop contract address
+const NFT_ADDRESS = "0x81d05436CB7D571954407F2B7775c8D9Ab45d70D";
 
 export default function MintNFT() {
   const account = useActiveAccount();
-  const client = useThirdwebClient(); // get the client from provider
+
   const contract = getContract({
-    client,
-    address: NFT_CONTRACT,
     chain: polygon,
+    address: NFT_ADDRESS,
   });
 
-  const { mutate: sendTx, isLoading, isSuccess } = useSendTransaction();
+  const { mutate: mintNFT, isLoading } = useMintNFT(contract);
 
-  const handleMint = () => {
+  const mint = () => {
     if (!account) return;
-    sendTx(
-      claimTo({
-        contract,
-        to: account.address,
-        quantity: 1n, // adjust as needed
-      }),
-    );
+    mintNFT({
+      to: account.address,
+      quantity: 1,
+    });
   };
 
   return (
     <div>
-      <button
-        className="bg-purple-600 text-white px-4 py-2 rounded"
-        onClick={handleMint}
-        disabled={isLoading || !account}
-      >
+      <button onClick={mint} disabled={isLoading || !account}>
         {isLoading ? "Minting..." : "Mint NFT"}
       </button>
-      {isSuccess && <p className="text-green-600 mt-2">NFT minted!</p>}
     </div>
   );
 }
