@@ -1,1 +1,14 @@
-import WalletConnect from "@/components/WalletConnect"; import ClaimToken from "@/components/ClaimToken"; import MintNFT from "@/components/MintNFT";  export default function Home() {   return (     <main className="max-w-xl mx-auto py-10 px-4">       <h1 className="text-3xl font-bold mb-6">         Bitnun Web3 Dashboard       </h1>       <WalletConnect />       <div className="space-y-6">         <ClaimToken />         <MintNFT />       </div>     </main>   ); } 
+import ClaimToken from "../components/ClaimToken";
+import MintNFT from "../components/MintNFT";
+import WalletConnect from "../components/WalletConnect";
+
+export default function Home() {
+  return (
+    <div>
+      <h1>Bitnun - NFT & Token Dashboard</h1>
+      <WalletConnect />
+      <ClaimToken />
+      <MintNFT />
+    </div>
+  );
+}
