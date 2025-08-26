@@ -1,14 +1,14 @@
-import "@/styles/globals.css";
 import type { AppProps } from "next/app";
-import { ThirdwebProvider } from "@thirdweb-dev/react";
-import { polygon } from "@thirdweb-dev/chains";
-import { createThirdwebClient } from "@thirdweb-dev/sdk";
+import { ThirdwebProvider } from "thirdweb/react";
+import { createThirdwebClient } from "thirdweb";
+import { polygon } from "thirdweb/chains";
+import "../styles/globals.css";
 
 const client = createThirdwebClient({
-  clientId: process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID!,
+  clientId: process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID as string,
 });
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ThirdwebProvider client={client} activeChain={polygon}>
       <Component {...pageProps} />
