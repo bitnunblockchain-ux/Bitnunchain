@@ -1,42 +1,48 @@
-import { useSendTransaction, useActiveAccount, useThirdwebClient } from "thirdweb/react";
+"use client";
+
+import { useSendTransaction, useActiveAccount } from "thirdweb/react";
 import { getContract } from "thirdweb";
 import { claimTo } from "thirdweb/extensions/erc20";
 import { polygon } from "thirdweb/chains";
 
-const TOKEN_CONTRACT = "0x89b0bf7cc5e4361D9dcfbD6a897437E416af4aa0";
-
 export default function ClaimToken() {
   const account = useActiveAccount();
-  const client = useThirdwebClient(); // get the client from provider
-  const contract = getContract({
-    client,
-    address: TOKEN_CONTRACT,
-    chain: polygon,
-  });
+  const { mutate: sendTx, isPending, isSuccess, error } = useSendTransaction();
 
-  const { mutate: sendTx, isLoading, isSuccess } = useSendTransaction();
-
-  const handleClaim = () => {
+  const handleClaim = async () => {
     if (!account) return;
-    sendTx(
-      claimTo({
+
+    try {
+      // Connect to your deployed contract
+      const contract = getContract({
+        client: { chain: polygon }, // client is already provided by ThirdwebProvider
+        address: process.env.NEXT_PUBLIC_TOKEN_ADDRESS as string,
+      });
+
+      const tx = claimTo({
         contract,
         to: account.address,
-        amount: 10n, // adjust as needed
-      }),
-    );
+        quantity: "10", // number of tokens to claim
+      });
+
+      sendTx(tx);
+    } catch (err) {
+      console.error("Claim failed:", err);
+    }
   };
 
   return (
-    <div>
+    <div className="p-4 border rounded-lg">
+      <h2 className="text-lg font-bold">Claim BTN Tokens</h2>
       <button
-        className="bg-blue-600 text-white px-4 py-2 rounded"
         onClick={handleClaim}
-        disabled={isLoading || !account}
+        disabled={!account || isPending}
+        className="mt-2 px-4 py-2 bg-blue-600 text-white rounded"
       >
-        {isLoading ? "Claiming..." : "Claim 10 BTN"}
+        {isPending ? "Claiming..." : "Claim 10 BTN"}
       </button>
-      {isSuccess && <p className="text-green-600 mt-2">Tokens claimed!</p>}
+      {isSuccess && <p className="text-green-600 mt-2">✅ Tokens claimed!</p>}
+      {error && <p className="text-red-600 mt-2">❌ Error: {error.message}</p>}
     </div>
   );
 }
