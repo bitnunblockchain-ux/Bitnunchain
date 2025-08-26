@@ -6,11 +6,10 @@
     "build": "next build",
     "start": "next start"
   },
-  "dependencies": {
-    "next": "15.2.4",
-    "react": "19.1.1",
-    "react-dom": "19.1.1",
-    "thirdweb": "^5.105.37",
-    "tailwindcss": "^4.1.12"
+  "devDependencies": {
+  "typescript": "^5.9.2",
+  "@types/react": "^19.1.11",
+  "@types/react-dom": "^19.1.8",
+  "@types/node": "^22.18.0"
   }
 }
