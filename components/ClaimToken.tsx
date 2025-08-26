@@ -1,19 +1,18 @@
-import { useState } from "react";
 import { useActiveAccount, useReadContract, useSendTransaction } from "thirdweb/react";
 import { getContract, prepareContractCall } from "thirdweb";
-import { polygon } from "thirdweb/chains";
-import { client } from "../thirdweb";
+import { client, CHAIN, TOKEN_ADDRESS } from "../thirdweb";
 
-const contract = getContract({
+const tokenContract = getContract({
   client,
-  chain: polygon,
-  address: process.env.NEXT_PUBLIC_TOKEN_ADDRESS as string, // ✅ make sure set in Vercel
+  chain: CHAIN,
+  address: TOKEN_ADDRESS,
 });
 
 export default function ClaimToken() {
   const account = useActiveAccount();
+
   const { data: balance } = useReadContract({
-    contract,
+    contract: tokenContract,
     method: "balanceOf",
     params: [account?.address || ""],
   });
@@ -23,9 +22,9 @@ export default function ClaimToken() {
   const claim = () => {
     if (!account) return;
     const tx = prepareContractCall({
-      contract,
+      contract: tokenContract,
       method: "claim",
-      params: [account.address, 1000n], // adjust amount
+      params: [account.address, 1000n], // ✅ adjust claimable amount
     });
     sendTransaction(tx);
   };
@@ -33,8 +32,12 @@ export default function ClaimToken() {
   return (
     <div>
       <p>Balance: {balance?.toString()}</p>
-      <button onClick={claim} disabled={isLoading || !account}>
-        {isLoading ? "Claiming..." : "Claim Tokens"}
+      <button
+        onClick={claim}
+        disabled={isLoading || !account}
+        className="px-4 py-2 rounded bg-blue-600 text-white"
+      >
+        {isLoading ? "Claiming..." : "Claim Bitnun Tokens"}
       </button>
     </div>
   );
